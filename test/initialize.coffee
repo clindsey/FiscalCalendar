@@ -1,5 +1,8 @@
 tests = [
   # list all source files here, line-by-line
+  "test/models/fiscalWeek"
+  "test/models/fiscalQuarter"
+  "test/models/fiscalCalendar"
   "test/index"
 ]
 
