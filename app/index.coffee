@@ -6,11 +6,10 @@ handlebarsHelpers = require "helpers/handlebars"
 
 module.exports = class Index
   constructor: ->
-    @fiscalCalendarModel = FiscalCalendarModel.create
-      year: 2012
-      month: 8
-      day: 30
-      format: "5-4-4"
-    @fiscalCalendarView = FiscalCalendarView.create @fiscalCalendarModel
+    @buildCalendar "5-4-4", 2012, 8, 30
+    @buildCalendar "4-4-5", 2013, 8, 29
 
-    $("body").append @fiscalCalendarView.render()
+  buildCalendar: (format, year, month, day) ->
+    fiscalCalendarModel = FiscalCalendarModel.create {format, year, month, day}
+    fiscalCalendarView = FiscalCalendarView.create fiscalCalendarModel
+    $("body").append fiscalCalendarView.render()

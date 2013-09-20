@@ -88,6 +88,15 @@ module.exports = (grunt) ->
           'public/javascripts/vendor.js': ['vendor/javascripts/*.js']
           'public/test/javascripts/test-vendor.js': ['test/vendor/javascripts/*.js']
 
+    concat:
+      compile:
+        src: [
+          'public/javascripts/vendor.js'
+          'public/javascripts/app.js'
+          'public/javascripts/templates.js'
+        ]
+        dest: 'public/javascripts/fiscalCalendar.js'
+
     clean:
       build: [
         'public'
@@ -134,7 +143,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'build', ['deploy', 'test']
 
-  grunt.registerTask 'deploy', ['clean:build', 'coffee', 'handlebars', 'commonjs', 'tusk_coffee', 'stylus', 'cssmin', 'docs', 'copy', 'clean:postDeploy']
+  grunt.registerTask 'deploy', ['clean:build', 'coffee', 'handlebars', 'commonjs', 'tusk_coffee', 'stylus', 'cssmin', 'docs', 'copy', 'concat', 'clean:postDeploy']
 
   grunt.registerTask 'test', ['blanket']#, 'mocha']
 

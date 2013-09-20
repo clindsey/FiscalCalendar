@@ -23,7 +23,8 @@
     "grunt-docco": "git://github.com/clindsey/grunt-docco.git",
     "scaffolt": "~0.4.0",
     "grunt-contrib-handlebars": "~0.5.10",
-    "grunt-contrib-stylus": "~0.8.0"
+    "grunt-contrib-stylus": "~0.8.0",
+    "grunt-contrib-concat": "~0.3.0"
   },
   "engines": {
     "node": ">=0.8.0"
