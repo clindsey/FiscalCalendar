@@ -21,7 +21,9 @@
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-commonjs": "https://github.com/clindsey/grunt-commonjs/archive/0.3.0.tar.gz",
     "grunt-docco": "git://github.com/clindsey/grunt-docco.git",
-    "scaffolt": "~0.4.0"
+    "scaffolt": "~0.4.0",
+    "grunt-contrib-handlebars": "~0.5.10",
+    "grunt-contrib-stylus": "~0.8.0"
   },
   "engines": {
     "node": ">=0.8.0"

@@ -16,15 +16,18 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
       days = []
 
       year = fiscalWeekModel.year
-      month = fiscalWeekModel.month + 1
+      month = fiscalWeekModel.month
       day = fiscalWeekModel.day
 
       daysInMonth = @_daysInMonth year, fiscalWeekModel.month
 
-      _.each [0..6], (dayIndex) =>
+      for dayIndex in [0..6]
+        date = (new Date "#{year} #{month + 1} #{day}")
+
         days.push
-          day: dayIndex
-          date: (new Date "#{year} #{month} #{day}").toJSON()
+          day: date.getDate()
+          date: date.toJSON()
+          dayOfWeek: dayIndex
 
         day += 1
 
@@ -32,8 +35,8 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
           day = 1
           month += 1
 
-          if month >= 11
-            month = 1
+          if month > 11
+            month = 0
             year += 1
 
       days
@@ -60,7 +63,7 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
       lastDay = new Date @days[6].date
       year = lastDay.getFullYear()
       month = lastDay.getMonth()
-      day = lastDay.getDay() + 1
+      day = lastDay.getDate()
 
       daysInMonth = FiscalWeekModel._daysInMonth year, month
 
@@ -70,7 +73,7 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
         day = 1
         month += 1
 
-        if month >= 11
+        if month > 11
           month = 1
           year += 1
 

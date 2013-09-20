@@ -3,6 +3,7 @@ tests = [
   "test/models/fiscalWeek"
   "test/models/fiscalQuarter"
   "test/models/fiscalCalendar"
+  "test/views/fiscalCalendar"
   "test/index"
 ]
 

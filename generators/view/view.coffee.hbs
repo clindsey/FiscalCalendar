@@ -6,3 +6,5 @@ module.exports = View.extend "{{#camelize}}{{name}}{{/camelize}}View",
 
       {{name}}View
   ,
+    dispose: ->
+      @_super()

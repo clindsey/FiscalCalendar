@@ -28,14 +28,14 @@ describe "Model FiscalWeek", ->
       expect(@fiscalWeekModel.days.length).to.equal 7
 
     it "has sunday as first day", ->
-      expect(@fiscalWeekModel.days[0].day).to.equal 0
+      expect(@fiscalWeekModel.days[0].day).to.equal 1
 
     it "has correct date as first day", ->
       year = fiscalWeekOptions.year
-      month = fiscalWeekOptions.month + 1
+      month = fiscalWeekOptions.month
       day = fiscalWeekOptions.day
 
-      date = (new Date "#{year} #{month} #{day}").toJSON()
+      date = (new Date "#{year} #{month + 1} #{day}").toJSON()
       expect(@fiscalWeekModel.days[0].date).to.equal date
 
     it "has correct days for regular week", ->
@@ -50,12 +50,12 @@ describe "Model FiscalWeek", ->
       ], (dayString) ->
         day = new Date dayString
         {
-          day: day.getDay()
+          day: day.getDate()
           date: day.toJSON()
         }
 
       for day, index in days
-        expect(@fiscalWeekModel.days[index].day).to.equal index
+        expect(@fiscalWeekModel.days[index].day).to.equal index + 1
         expect(@fiscalWeekModel.days[index].date).to.equal day.date
 
     context "with utility helpers", ->
@@ -76,6 +76,18 @@ describe "Model FiscalWeek", ->
 
       @fiscalWeekModel = FiscalWeekModel.create specialOptions
 
+    it "has day of week", ->
+      days = _.map [
+        "2012 9 30"
+      ], (dayString) ->
+        day = new Date dayString
+        obj = {
+          dayOfWeek: day.getDay()
+        }
+
+      for day, index in days
+        expect(@fiscalWeekModel.days[index].dayOfWeek).to.equal day.dayOfWeek
+
     it "has correct days for week starting in another month", ->
       days = _.map [
         "2012 9 30"
@@ -88,12 +100,12 @@ describe "Model FiscalWeek", ->
       ], (dayString) ->
         day = new Date dayString
         obj = {
-          day: day.getDay()
+          day: day.getDate()
           date: day.toJSON()
         }
 
       for day, index in days
-        expect(@fiscalWeekModel.days[index].day).to.equal index
+        expect(@fiscalWeekModel.days[index].day).to.equal day.day
         expect(@fiscalWeekModel.days[index].date).to.equal day.date
 
   context "with weeks starting in another year", ->
@@ -117,12 +129,12 @@ describe "Model FiscalWeek", ->
       ], (dayString) ->
         day = new Date dayString
         obj = {
-          day: day.getDay()
+          day: day.getDate()
           date: day.toJSON()
         }
 
       for day, index in days
-        expect(@fiscalWeekModel.days[index].day).to.equal index
+        expect(@fiscalWeekModel.days[index].day).to.equal day.day
         expect(@fiscalWeekModel.days[index].date).to.equal day.date
 
   context "with leap years", ->
@@ -145,12 +157,12 @@ describe "Model FiscalWeek", ->
       ], (dayString) ->
         day = new Date dayString
         obj = {
-          day: day.getDay()
+          day: day.getDate()
           date: day.toJSON()
         }
 
       for day, index in days
-        expect(@fiscalWeekModel.days[index].day).to.equal index
+        expect(@fiscalWeekModel.days[index].day).to.equal day.day
         expect(@fiscalWeekModel.days[index].date).to.equal day.date
 
     it "has correct week days for a leap year", ->
@@ -172,10 +184,10 @@ describe "Model FiscalWeek", ->
       ], (dayString) ->
         day = new Date dayString
         obj = {
-          day: day.getDay()
+          day: day.getDate()
           date: day.toJSON()
         }
 
       for day, index in days
-        expect(@fiscalWeekModel.days[index].day).to.equal index
+        expect(@fiscalWeekModel.days[index].day).to.equal day.day
         expect(@fiscalWeekModel.days[index].date).to.equal day.date

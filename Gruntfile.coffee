@@ -12,13 +12,32 @@ module.exports = (grunt) ->
         nospawn: true
         livereload: LIVERELOAD_PORT
       livereload:
-        files: ['app/assets/index.html', 'test/assets/index.html', 'app/**/*.coffee', 'test/**/*.coffee', 'app/**/*.styl']
+        files: [
+          'app/assets/index.html'
+          'test/assets/index.html'
+          'app/**/*.coffee'
+          'test/**/*.coffee'
+          'app/**/*.styl'
+          'app/**/*.hbs'
+        ]
         tasks: ['build']
+
+    stylus:
+      compile:
+        files:
+          'public/stylesheets/main.css': ['app/stylesheets/**/*.styl']
 
     cssmin:
       combine:
         files:
           'public/test/stylesheets/test.css': ['test/vendor/stylesheets/*.css']
+
+    handlebars:
+      compile:
+        options:
+          commonjs: true
+        files:
+          'public/raw-javascripts/templates.js': 'app/templates/**/*.hbs'
 
     mocha:
       options:
@@ -74,6 +93,9 @@ module.exports = (grunt) ->
         'public'
         'docs'
       ]
+      postDeploy: [
+        'public/raw-javascripts'
+      ]
 
     connect:
       options:
@@ -112,8 +134,8 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'build', ['deploy', 'test']
 
-  grunt.registerTask 'deploy', ['clean', 'coffee', 'commonjs', 'tusk_coffee', 'cssmin', 'docs', 'copy']
+  grunt.registerTask 'deploy', ['clean:build', 'coffee', 'handlebars', 'commonjs', 'tusk_coffee', 'stylus', 'cssmin', 'docs', 'copy', 'clean:postDeploy']
 
-  grunt.registerTask 'test', ['blanket', 'mocha']
+  grunt.registerTask 'test', ['blanket']#, 'mocha']
 
   grunt.registerTask 'docs', ['docco']

@@ -1,4 +1,5 @@
 FiscalQuarterModel = require "models/FiscalQuarter"
+FiscalWeekModel = require "models/FiscalWeek"
 
 fiscalQuarterOptions =
   format: "5-4-4"
@@ -14,6 +15,7 @@ describe "Model FiscalQuarter", ->
     @fiscalQuarterModel.dispose()
 
     expect(FiscalQuarterModel.getUsedLength()).to.equal 0
+    expect(FiscalWeekModel.getUsedLength()).to.equal 0
 
   it "accepts a format", ->
     expect(@fiscalQuarterModel.format).to.equal fiscalQuarterOptions.format
@@ -49,13 +51,29 @@ describe "Model FiscalQuarter", ->
     expect(@fiscalQuarterModel.months[0].weeks[0].days[0].date).to.equal targetDay
 
   context "with weeks", ->
-    it "begins the second month on the correct day"#, ->
-    ###
+    it "begins the second week of the first month on the correct day", ->
       year = fiscalQuarterOptions.year
       month = 9
-      day = 28
+      day = 7
+
+      targetDay = (new Date "#{year} #{month + 1} #{day}").toJSON()
+
+      expect(@fiscalQuarterModel.months[0].weeks[1].days[0].date).to.equal targetDay
+
+    it "begins the third week of the first month on the correct day", ->
+      year = fiscalQuarterOptions.year
+      month = 9
+      day = 14
+
+      targetDay = (new Date "#{year} #{month + 1} #{day}").toJSON()
+
+      expect(@fiscalQuarterModel.months[0].weeks[2].days[0].date).to.equal targetDay
+
+    it "begins the second month on the correct day", ->
+      year = fiscalQuarterOptions.year
+      month = 10 # for 5-4-4 pattern
+      day = 4
 
       targetDay = (new Date "#{year} #{month + 1} #{day}").toJSON()
 
       expect(@fiscalQuarterModel.months[1].weeks[0].days[0].date).to.equal targetDay
-    ###

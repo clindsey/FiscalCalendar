@@ -6,3 +6,5 @@ module.exports = Model.extend "{{#camelize}}{{name}}{{/camelize}}Model",
 
       {{name}}Model
   ,
+    dispose: ->
+      @_super()
