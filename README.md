@@ -3,6 +3,12 @@ clindsey/FiscalCalendar
 
 Generates a fiscal calendar suitable for accounting application.
 
+[Try the demo here](http://clindsey.github.io/FiscalCalendar/).
+
+[Read the annotated source here](http://clindsey.github.io/FiscalCalendar/docs/).
+
+[Run the mocha tests here](http://clindsey.github.io/FiscalCalendar/test/).
+
 ### Options
 
 * `year`, `month`, `day` are required, they mark the first day of the calendar
