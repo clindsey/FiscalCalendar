@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>FiscalCalendar.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="helpers_handlebars.html">
+                app/helpers/handlebars.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                app/index.coffee
+              </a>
+            
+              
+              <a class="source" href="models_FiscalCalendar.html">
+                app/models/FiscalCalendar.coffee
+              </a>
+            
+              
+              <a class="source" href="models_FiscalQuarter.html">
+                app/models/FiscalQuarter.coffee
+              </a>
+            
+              
+              <a class="source" href="models_FiscalWeek.html">
+                app/models/FiscalWeek.coffee
+              </a>
+            
+              
+              <a class="source" href="models_base_Model.html">
+                app/models/base/Model.coffee
+              </a>
+            
+              
+              <a class="source" href="views_FiscalCalendar.html">
+                app/views/FiscalCalendar.coffee
+              </a>
+            
+              
+              <a class="source" href="views_base_View.html">
+                app/views/base/View.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>FiscalCalendar.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Model = require <span class="string">"models/base/Model"</span>
+FiscalQuarterModel = require <span class="string">"models/FiscalQuarter"</span>
+
+module.exports = Model.extend <span class="string">"FiscalCalendarModel"</span>,
+    create: (settings) -&gt;
+      <span class="property">@_assignSettings</span> settings
+
+      fiscalCalendarModel = <span class="property">@_super</span>()
+
+      fiscalCalendarModel.year = settings.year
+      fiscalCalendarModel.month = settings.month
+      fiscalCalendarModel.day = settings.day
+      fiscalCalendarModel.format = settings.format || <span class="string">"5-4-4"</span>
+
+      fiscalCalendarModel.quarters = <span class="property">@_generateQuarters</span> fiscalCalendarModel
+
+      fiscalCalendarModel
+
+    REQUIRED_SETTINGS: [
+      <span class="string">"year"</span>
+      <span class="string">"month"</span>
+      <span class="string">"day"</span>
+    ]
+
+    _generateQuarters: (fiscalCalendarModel) -&gt;
+      quarters = []
+
+      quarter = FiscalQuarterModel.create
+        format: fiscalCalendarModel.format
+        year: fiscalCalendarModel.year
+        month: fiscalCalendarModel.month
+        day: fiscalCalendarModel.day
+
+      quarters.push quarter
+
+      <span class="keyword">for</span> quarterIndex <span class="keyword">in</span> [<span class="number">1.</span><span class="number">.3</span>]
+        lastMonth = quarter.months[quarter.months.length - <span class="number">1</span>]
+        lastWeek = lastMonth.weeks[lastMonth.weeks.length - <span class="number">1</span>]
+        quarterOptions = _.extend (_.extend {}, lastWeek.nextDay()),
+          format: fiscalCalendarModel.format
+        quarter = FiscalQuarterModel.create quarterOptions
+
+        quarters.push quarter
+
+      quarters
+
+    _assignSettings: (settings) -&gt;
+      _.each <span class="property">@REQUIRED_SETTINGS</span>, (value) -&gt;
+        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Forgot to supply <span class="subst">#{value}</span>"</span>) <span class="keyword">unless</span> settings[value]?
+  ,
+    dispose: -&gt;
+      <span class="keyword">for</span> quarter <span class="keyword">in</span> <span class="property">@quarters</span>
+        quarter.dispose()
+
+      <span class="property">@_super</span>()</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

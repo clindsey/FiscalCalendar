@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>FiscalWeek.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="helpers_handlebars.html">
+                app/helpers/handlebars.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                app/index.coffee
+              </a>
+            
+              
+              <a class="source" href="models_FiscalCalendar.html">
+                app/models/FiscalCalendar.coffee
+              </a>
+            
+              
+              <a class="source" href="models_FiscalQuarter.html">
+                app/models/FiscalQuarter.coffee
+              </a>
+            
+              
+              <a class="source" href="models_FiscalWeek.html">
+                app/models/FiscalWeek.coffee
+              </a>
+            
+              
+              <a class="source" href="models_base_Model.html">
+                app/models/base/Model.coffee
+              </a>
+            
+              
+              <a class="source" href="views_FiscalCalendar.html">
+                app/views/FiscalCalendar.coffee
+              </a>
+            
+              
+              <a class="source" href="views_base_View.html">
+                app/views/base/View.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>FiscalWeek.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Model = require <span class="string">"models/base/Model"</span>
+
+module.exports = FiscalWeekModel = Model.extend <span class="string">"FiscalWeekModel"</span>,
+    create: (options) -&gt;
+      fiscalWeekModel = <span class="property">@_super</span>()
+
+      fiscalWeekModel.year = options.year
+      fiscalWeekModel.month = options.month
+      fiscalWeekModel.day = options.day
+
+      fiscalWeekModel.days = <span class="property">@_buildDays</span> fiscalWeekModel
+
+      fiscalWeekModel
+
+    _buildDays: (fiscalWeekModel) -&gt;
+      days = []
+
+      year = fiscalWeekModel.year
+      month = fiscalWeekModel.month
+      day = fiscalWeekModel.day
+
+      daysInMonth = <span class="property">@_daysInMonth</span> year, fiscalWeekModel.month
+
+      <span class="keyword">for</span> dayIndex <span class="keyword">in</span> [<span class="number">0.</span><span class="number">.6</span>]
+        date = (<span class="keyword">new</span> Date <span class="string">"<span class="subst">#{year}</span> <span class="subst">#{month + <span class="number">1</span>}</span> <span class="subst">#{day}</span>"</span>)
+
+        days.push
+          day: date.getDate()
+          date: date.toJSON()
+          dayOfWeek: dayIndex
+
+        day += <span class="number">1</span>
+
+        <span class="keyword">if</span> day &gt; daysInMonth <span class="comment"># this fiscal week spans 2 months</span>
+          day = <span class="number">1</span>
+          month += <span class="number">1</span>
+
+          <span class="keyword">if</span> month &gt; <span class="number">11</span>
+            month = <span class="number">0</span>
+            year += <span class="number">1</span>
+
+      days
+
+    _daysInMonth: (year, month) -&gt;
+      <span class="keyword">if</span> month <span class="keyword">is</span> <span class="number">1</span>
+        <span class="number">28</span> + <span class="property">@_isLeapYear</span> year
+      <span class="keyword">else</span>
+        <span class="number">31</span> - (month) % <span class="number">7</span> % <span class="number">2</span>
+
+    _isLeapYear: (year) -&gt;
+      isLeapYear = <span class="literal">false</span>
+
+      <span class="keyword">if</span> year % <span class="number">400</span> <span class="keyword">is</span> <span class="number">0</span>
+        isLeapYear = <span class="literal">true</span>
+      <span class="keyword">else</span> <span class="keyword">if</span> year % <span class="number">100</span> <span class="keyword">is</span> <span class="number">0</span>
+        isLeapYear = <span class="literal">true</span>
+      <span class="keyword">else</span> <span class="keyword">if</span> year % <span class="number">4</span> <span class="keyword">is</span> <span class="number">0</span>
+        isLeapYear = <span class="literal">true</span>
+
+      isLeapYear
+  ,
+    nextDay: -&gt;
+      lastDay = <span class="keyword">new</span> Date <span class="property">@days</span>[<span class="number">6</span>].date
+      year = lastDay.getFullYear()
+      month = lastDay.getMonth()
+      day = lastDay.getDate()
+
+      daysInMonth = FiscalWeekModel._daysInMonth year, month
+
+      day += <span class="number">1</span>
+
+      <span class="keyword">if</span> day &gt; daysInMonth <span class="comment"># this fiscal week spans 2 months</span>
+        day = <span class="number">1</span>
+        month += <span class="number">1</span>
+
+        <span class="keyword">if</span> month &gt; <span class="number">11</span>
+          month = <span class="number">1</span>
+          year += <span class="number">1</span>
+
+      {year, month, day}
+
+    dispose: -&gt;
+      <span class="property">@_super</span>()</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
