@@ -24,7 +24,6 @@ module.exports = Model.extend "FiscalQuarterModel",
       weekFormat = fiscalQuarterModel.format.match /\d+/g
 
       # this is where the format is applied - 4-4-5, 5-4-4, 4-5-4
-
       for weekCount in weekFormat
         weeks = []
 
@@ -43,10 +42,20 @@ module.exports = Model.extend "FiscalQuarterModel",
 
         week = FiscalWeekModel.create nextDay
 
-      # this week isn't a part of this quarter
       week.dispose()
 
+      # the 53rd week is added here
+      mostUsedMonth = @_mostUsedMonth months[months.length - 1].weeks
+      daysInMonth = FiscalWeekModel.daysInMonth nextDay.year, mostUsedMonth
+      if mostUsedMonth is nextDay.month and daysInMonth - (nextDay.day - 1) >= 5
+        week = FiscalWeekModel.create nextDay
+        month = months[months.length - 1]
+        month.weeks.push week
+
       months
+
+    _mostUsedMonth: (weeks) ->
+      +_.chain(weeks).pluck('month').countBy().pairs().max(_.last).head()
   ,
     dispose: ->
       for month in @months

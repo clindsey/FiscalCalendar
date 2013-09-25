@@ -12,6 +12,24 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
 
       fiscalWeekModel
 
+    daysInMonth: (year, month) ->
+      if month is 1
+        28 + @isLeapYear year
+      else
+        31 - (month) % 7 % 2
+
+    isLeapYear: (year) ->
+      isLeapYear = false
+
+      if year % 400 is 0
+        isLeapYear = true
+      else if year % 100 is 0
+        isLeapYear = false
+      else if year % 4 is 0
+        isLeapYear = true
+
+      isLeapYear
+
     _buildDays: (fiscalWeekModel) ->
       days = []
 
@@ -19,7 +37,7 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
       month = fiscalWeekModel.month
       day = fiscalWeekModel.day
 
-      daysInMonth = @_daysInMonth year, fiscalWeekModel.month
+      daysInMonth = FiscalWeekModel.daysInMonth year, fiscalWeekModel.month
 
       for dayIndex in [0..6]
         date = (new Date "#{year} #{month + 1} #{day}")
@@ -40,24 +58,6 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
             year += 1
 
       days
-
-    _daysInMonth: (year, month) ->
-      if month is 1
-        28 + @_isLeapYear year
-      else
-        31 - (month) % 7 % 2
-
-    _isLeapYear: (year) ->
-      isLeapYear = false
-
-      if year % 400 is 0
-        isLeapYear = true
-      else if year % 100 is 0
-        isLeapYear = true
-      else if year % 4 is 0
-        isLeapYear = true
-
-      isLeapYear
   ,
     nextDay: ->
       lastDay = new Date @days[6].date
@@ -65,8 +65,9 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
       month = lastDay.getMonth()
       day = lastDay.getDate()
 
-      daysInMonth = FiscalWeekModel._daysInMonth year, month
+      daysInMonth = FiscalWeekModel.daysInMonth year, month
 
+      # TODO: not DRY
       day += 1
 
       if day > daysInMonth # this fiscal week spans 2 months
@@ -74,7 +75,7 @@ module.exports = FiscalWeekModel = Model.extend "FiscalWeekModel",
         month += 1
 
         if month > 11
-          month = 1
+          month = 0
           year += 1
 
       {year, month, day}

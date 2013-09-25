@@ -59,3 +59,31 @@ describe "Model FiscalCalendar", ->
           expect(@fiscalCalendarModel.quarters[1].months[0].weeks.length).to.equal 4
           expect(@fiscalCalendarModel.quarters[1].months[1].weeks.length).to.equal 4
           expect(@fiscalCalendarModel.quarters[1].months[2].weeks.length).to.equal 5
+
+      it "has 52 weeks for a normal year", ->
+        weekCount = 0
+
+        for quarter in @fiscalCalendarModel.quarters
+          for month in quarter.months
+            weekCount += month.weeks.length
+
+        expect(weekCount).to.equal 52
+
+  context "with 53 week year options", ->
+    fiscalCalendarSpecialOptions =
+      year: 2012
+      month: 0
+      day: 29
+      format: "4-5-4"
+
+    beforeEach ->
+      @fiscalCalendarModel = FiscalCalendarModel.create fiscalCalendarSpecialOptions
+
+    it "should have 53 weeks for a special year", ->
+      weekCount = 0
+
+      for quarter in @fiscalCalendarModel.quarters
+        for month in quarter.months
+          weekCount += month.weeks.length
+
+      expect(weekCount).to.equal 53
